@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_async_session
 from operations.models import operation
+from operations.schemas import OperationCreate
 
 router = APIRouter(
     prefix="/operations",
@@ -16,3 +17,10 @@ async def get_specific_operations(operation_type: str, session: AsyncSession = D
     query = select(operation).where(operation.c.type == operation_type)
     result = await session.execute(query)
     return result.mappings().all()
+
+@router.post("/")
+async def add_apecific_operations(new_operation: OperationCreate, session: AsyncSession = Depends(get_async_session)):
+    stmt = insert(operation).values(**new_operation.dict())
+    await session.execute(stmt)
+    await session.commit()
+    return {"status":"success"}

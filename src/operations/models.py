@@ -12,3 +12,5 @@ operation = Table(
     Column("date", TIMESTAMP),
     Column("type", String),
 )
+
+
